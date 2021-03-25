@@ -29,20 +29,19 @@
 # BUILDER IMAGE
 #---------------------------------------------------------------------
 FROM ubuntu:bionic as oai-spgwu-tiny-builder
-
-ARG EURECOM_PROXY
+MAINTAINER Luis Ariza "lfarizav@idtolu.com"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe
+ENV TZ=America/Bogota
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     psmisc \
     git
 
 # Some GIT configuration command quite useful
-RUN /bin/bash -c "if [[ -v EURECOM_PROXY ]]; then git config --global http.proxy $EURECOM_PROXY; fi"
-RUN git config --global https.postBuffer 123289600
-RUN git config --global http.sslverify false
+#RUN /bin/bash -c "if [[ -v EURECOM_PROXY ]]; then git config --global http.proxy $EURECOM_PROXY; fi"
+#RUN git config --global https.postBuffer 123289600
+#RUN git config --global http.sslverify false
 
 # Copy the workspace as is
 WORKDIR /openair-spgwu-tiny
@@ -58,7 +57,7 @@ RUN ./build_spgwu --clean --build-type Release --jobs --Verbose
 #---------------------------------------------------------------------
 FROM ubuntu:bionic as oai-spgwu-tiny
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe
+ENV TZ=America/Bogota
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # We install some debug tools for the moment in addition of mandatory libraries
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && DEBIAN_FRONTEND=noninteractive apt-get install --yes \
